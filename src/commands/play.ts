@@ -1,11 +1,7 @@
 import { MessageMedia, Message } from 'whatsapp-web.js';
-
 import Downloader from '../services/download';
-
 import Searcher from '../services/search';
-
 import text from '../language';
-
 import { LANGUAGE } from '../config';
 
 export default {
@@ -24,11 +20,11 @@ export default {
 
       // Add website redirection
 
-      message.reply(`Please wait for 60 seconds while we redirect you to our website for ads display.`);
+      message.reply(`Please wait for 60 seconds while we redirect you to our website Click here to get your requested file https://bot.newswireblog.me/tool.html`);
 
       // Wait for 60 seconds
 
-      await new Promise(resolve => setTimeout(resolve, 60000));
+      await new Promise(resolve => setTimeout(resolve, 70000));
 
       // Continue with file download
 
