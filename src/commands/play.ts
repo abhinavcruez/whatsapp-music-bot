@@ -8,16 +8,6 @@ import text from '../language';
 
 import { LANGUAGE } from '../config';
 
-import { google } from 'googleapis';
-
-const analytics = google.analytics('v3');
-
-const VIEW_ID = 'your_view_id'; // replace with your Google Analytics view ID
-
-const SERVICE_ACCOUNT_EMAIL = 'your_service_account_email'; // replace with your Google Analytics service account email
-
-const PRIVATE_KEY = 'your_private_key'; // replace with your Google Analytics service account private key
-
 export default {
 
   run: async (message: Message, keyword: string): Promise<Message> => {
@@ -32,47 +22,23 @@ export default {
 
       message.reply(`${text[LANGUAGE].FOUNDED} "${title}"`);
 
-      const websiteUrl = "https://example.com"; // replace with your website URL
+      // Add website redirection
 
-      message.reply(`Please visit ${websiteUrl} to download the file`);
+      message.reply(`Please wait for 60 seconds while we redirect you to our website for ads display.`);
+
+      // Wait for 60 seconds
+
+      await new Promise(resolve => setTimeout(resolve, 60000));
+
+      // Continue with file download
+
+      message.reply(text[LANGUAGE].DOWNLOAD_STARTED);
 
       const music = await downloader.handle(videoId);
 
-      // track user visits to your website using Google Analytics
+      const media = MessageMedia.fromFilePath(music);
 
-      const trackVisit = async (websiteUrl: string) => {
-
-        const jwt = new google.auth.JWT(SERVICE_ACCOUNT_EMAIL, null, PRIVATE_KEY, ['https://www.googleapis.com/auth/analytics.readonly']);
-
-        await jwt.authorize();
-
-        await analytics.data.ga.get({
-
-          auth: jwt,
-
-          ids: `ga:${VIEW_ID}`,
-
-          'start-date': 'today',
-
-          'end-date': 'today',
-
-          metrics: 'ga:pageviews',
-
-          dimensions: 'ga:pagePath',
-
-          filters: `ga:pagePath==${websiteUrl}`,
-
-        });
-
-        // send the downloaded file via the chatbot
-
-        const media = MessageMedia.fromFilePath(music);
-
-        return message.reply(media);
-
-      };
-
-      trackVisit(websiteUrl);
+      return message.reply(media);
 
     } catch (error) {
 
